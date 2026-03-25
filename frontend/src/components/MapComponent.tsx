@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -23,41 +23,70 @@ const ChangeView = ({ center, zoom }: { center: [number, number], zoom: number }
   return null;
 };
 
-const MapComponent = () => {
+const LocationPickerMarker = ({ onLocationSelect }: { onLocationSelect?: (pos: [number, number]) => void }) => {
+  const [position, setPosition] = useState<[number, number] | null>(null);
+  const map = useMapEvents({
+    click(e) {
+      const newPos: [number, number] = [e.latlng.lat, e.latlng.lng];
+      setPosition(newPos);
+      if (onLocationSelect) onLocationSelect(newPos);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  return position === null ? null : (
+    <Marker 
+      position={position} 
+      draggable={true}
+      eventHandlers={{
+        dragend: (e) => {
+          const marker = e.target;
+          const newPos: [number, number] = [marker.getLatLng().lat, marker.getLatLng().lng];
+          setPosition(newPos);
+          if (onLocationSelect) onLocationSelect(newPos);
+        }
+      }}
+    >
+      <Popup>Your Selected Location</Popup>
+    </Marker>
+  );
+};
+
+const MapComponent = ({ isPicker, onLocationSelect }: { isPicker?: boolean, onLocationSelect?: (pos: [number, number]) => void }) => {
   const center: [number, number] = [28.6139, 77.2090]; // Delhi/NCR
 
   return (
-    <div className="w-full h-[300px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white mb-6 z-10">
+    <div className={`w-full ${isPicker ? 'h-full' : 'h-[300px] mb-6'} rounded-3xl overflow-hidden shadow-2xl border-4 border-white z-10`}>
       <MapContainer 
         center={center} 
         zoom={13} 
-        scrollWheelZoom={false} 
+        scrollWheelZoom={true} 
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ChangeView center={center} zoom={13} />
         
-        {/* Mock Marker for Nearby Parking */}
-        <Marker position={[28.6139, 77.2090]}>
-          <Popup>
-            <div className="p-1 font-sans">
-              <p className="font-bold text-blue-600">DLF Cyber Hub P3</p>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Available: 24 Slots</p>
-            </div>
-          </Popup>
-        </Marker>
-
-        <Marker position={[28.6200, 77.2200]}>
-          <Popup>
-            <div className="p-1 font-sans">
-              <p className="font-bold text-red-600">Ambience Mall South</p>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Available: 15 Slots</p>
-            </div>
-          </Popup>
-        </Marker>
+        {isPicker ? (
+          <LocationPickerMarker onLocationSelect={onLocationSelect} />
+        ) : (
+          <>
+            <Marker position={[28.6139, 77.2090]}>
+              <Popup>
+                <div className="p-1 font-sans">
+                  <p className="font-bold text-blue-600">DLF Cyber Hub P3</p>
+                </div>
+              </Popup>
+            </Marker>
+            <Marker position={[28.6200, 77.2200]}>
+              <Popup>
+                <div className="p-1 font-sans font-bold text-red-600">Ambience Mall South</div>
+              </Popup>
+            </Marker>
+          </>
+        )}
       </MapContainer>
     </div>
   );

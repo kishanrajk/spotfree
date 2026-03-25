@@ -12,6 +12,6 @@ const MapComponent = dynamic(() => import('./MapComponent'), {
   )
 });
 
-export default function SpotMap() {
-  return <MapComponent />;
+export default function SpotMap({ isPicker, onLocationSelect }: { isPicker?: boolean, onLocationSelect?: (pos: [number, number]) => void }) {
+  return <MapComponent isPicker={isPicker} onLocationSelect={onLocationSelect} />;
 }
