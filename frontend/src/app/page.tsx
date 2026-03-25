@@ -32,11 +32,22 @@ export default function Home() {
     <main className="flex min-h-screen flex-col bg-gray-50 pb-20">
       {/* Header */}
       <div className="bg-white px-6 pt-12 pb-6 shadow-sm flex justify-between items-center rounded-b-3xl">
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-black text-blue-600 tracking-tighter">SpotFree</h1>
-          <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
-            {activeTab === "explore" ? "Premium Parking" : activeTab === "history" ? "Your Bookings" : "User Profile"}
-          </p>
+        <div className="flex items-center space-x-3">
+          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h1" />
+              <circle cx="7" cy="17" r="2" />
+              <circle cx="17" cy="17" r="2" />
+              <path d="M12 2v4" />
+              <path d="M10 4h4" />
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-black text-blue-600 tracking-tighter leading-none">SpotFree</h1>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+              {activeTab === "explore" ? "Premium Parking" : activeTab === "history" ? "Your Bookings" : "User Profile"}
+            </p>
+          </div>
         </div>
         <div className="flex space-x-3">
           <button className="p-2 bg-gray-100 rounded-full text-gray-600">
@@ -66,14 +77,14 @@ export default function Home() {
             {/* Map Section */}
             <Map />
 
-            {/* Nearby Header */}
+                  {/* Nearby Header */}
             <div className="flex justify-between items-center mb-4 px-1">
               <h2 className="text-lg font-extrabold text-gray-900">Nearby Spots</h2>
               <button className="text-blue-600 text-xs font-bold uppercase tracking-widest">View Map</button>
             </div>
 
             {/* Parking List */}
-            <div className="space-y-4">
+            <div className="space-y-4 mb-10">
               {filteredSpots.map((spot, idx) => (
                 <div key={idx} onClick={() => handleBookClick(spot.name, spot.price)}>
                   <ParkingCard {...spot} />
@@ -82,6 +93,33 @@ export default function Home() {
               {filteredSpots.length === 0 && (
                 <p className="text-center text-gray-400 py-10 font-bold">No parking spots found.</p>
               )}
+            </div>
+
+            {/* Testimonials Section */}
+            <div className="mb-10">
+              <h2 className="text-lg font-extrabold text-gray-900 mb-4 px-1">What our community says</h2>
+              <div className="flex space-x-4 overflow-x-auto pb-6 -mx-6 px-6 no-scrollbar">
+                {[
+                  { name: "Sarah K.", text: '"Found the perfect spot near Wembley for the concert. Half the price of official parking and super easy to book!"', rating: 5 },
+                  { name: "James T.", text: '"As a host, I\'ve earned over ₹25,000 from my unused driveway. The platform makes it so simple to manage bookings."', rating: 5 },
+                  { name: "Emma R.", text: '"Saved so much time and stress finding parking near the hospital for my appointments. Will definitely use again."', rating: 5 }
+                ].map((testimonial, idx) => (
+                  <div key={idx} className="min-w-[280px] bg-white p-6 rounded-3xl shadow-md border border-gray-50 flex flex-col justify-between">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xs">
+                        {testimonial.name.slice(0, 2)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900 text-sm">{testimonial.name}</p>
+                        <div className="flex text-orange-400">
+                          {[...Array(testimonial.rating)].map((_, i) => <span key={i} className="text-[10px]">★</span>)}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-xs italic leading-relaxed">{testimonial.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </>
         )}
