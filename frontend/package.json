@@ -1,0 +1,36 @@
+{
+  "name": "spotfree-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ducanh2912/next-pwa": "latest",
+    "@tailwindcss/postcss": "^4.2.2",
+    "@types/leaflet": "^1.9.21",
+    "clsx": "latest",
+    "leaflet": "^1.9.4",
+    "lucide-react": "latest",
+    "next": "latest",
+    "next-themes": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-leaflet": "^5.0.0",
+    "tailwind-merge": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}
